@@ -365,9 +365,10 @@ function closeAssignSheet() {
 
 function assignPlayer(targetZone) {
   if (selectedId === null) return;
+  const pid      = selectedId;   // capture BEFORE closeAssignSheet clears them
   const fromZone = selectedZone;
   closeAssignSheet();
-  movePlayer(selectedId, fromZone, targetZone);
+  movePlayer(pid, fromZone, targetZone);
 
   // On mobile, switch to the destination tab after assigning
   if (isMobile()) {
