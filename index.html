@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>UDJ Hockey Tryouts 2026-2027</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <h1>UDJ Hockey — Tryout Roster Builder</h1>
+    <p class="header-sub">2026–2027 &bull; Varsity: 12F / 6D / 3G &bull; JV: 12F / 6D / 3G</p>
+  </div>
+  <div class="header-right">
+    <button class="btn btn-add"    onclick="openModal()">+ Add</button>
+    <button class="btn btn-export" onclick="exportRosters()">Export</button>
+    <button class="btn btn-reset"  onclick="resetAll()">Reset</button>
+  </div>
+</header>
+
+<!-- TAB BAR (mobile only) -->
+<nav class="tab-bar">
+  <button class="tab-btn active" data-tab="available" onclick="switchTab('available')">
+    Pool <span class="tab-badge" id="tab-badge-available"></span>
+  </button>
+  <button class="tab-btn" data-tab="varsity" onclick="switchTab('varsity')">
+    Varsity <span class="tab-badge" id="tab-badge-varsity"></span>
+  </button>
+  <button class="tab-btn" data-tab="jv" onclick="switchTab('jv')">
+    JV <span class="tab-badge" id="tab-badge-jv"></span>
+  </button>
+  <button class="tab-btn" data-tab="cuts" onclick="switchTab('cuts')">
+    Cuts <span class="tab-badge" id="tab-badge-cuts"></span>
+  </button>
+</nav>
+
+<!-- MAIN GRID (desktop 3-column, mobile single panel) -->
+<div class="main-grid">
+
+  <!-- AVAILABLE POOL -->
+  <div class="panel available-panel tab-panel" data-panel="available">
+    <div class="panel-header">
+      <h2>Available Players</h2>
+      <span class="panel-count" id="avail-count">0</span>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-btn f-all active" onclick="setFilter('ALL')">All</button>
+      <button class="filter-btn f-F"  onclick="setFilter('F')">Fwd</button>
+      <button class="filter-btn f-D"  onclick="setFilter('D')">Def</button>
+      <button class="filter-btn f-G"  onclick="setFilter('G')">Goal</button>
+    </div>
+    <div class="player-list drop-zone" id="zone-available"
+         ondragover="onDragOver(event)"
+         ondrop="onDrop(event,'available')">
+    </div>
+  </div>
+
+  <!-- VARSITY PANEL -->
+  <div class="panel varsity-panel tab-panel" data-panel="varsity">
+    <div class="panel-header">
+      <h2>Varsity</h2>
+      <span class="panel-count" id="varsity-total">0 / 21</span>
+    </div>
+    <div class="team-body">
+
+      <div class="pos-group">
+        <div class="pos-group-header">
+          <span class="pos-group-label">Forwards</span>
+          <span class="pos-group-count" id="cnt-varsity-F">0 / 12</span>
+        </div>
+        <div class="drop-zone team-drop-fwd" id="zone-varsity-F"
+             ondragover="onDragOver(event)"
+             ondrop="onDrop(event,'varsity-F')">
+        </div>
+      </div>
+
+      <div class="pos-group">
+        <div class="pos-group-header">
+          <span class="pos-group-label">Defense</span>
+          <span class="pos-group-count" id="cnt-varsity-D">0 / 6</span>
+        </div>
+        <div class="drop-zone team-drop-def" id="zone-varsity-D"
+             ondragover="onDragOver(event)"
+             ondrop="onDrop(event,'varsity-D')">
+        </div>
+      </div>
+
+      <div class="pos-group">
+        <div class="pos-group-header">
+          <span class="pos-group-label">Goalies</span>
+          <span class="pos-group-count" id="cnt-varsity-G">0 / 3</span>
+        </div>
+        <div class="drop-zone team-drop-goal" id="zone-varsity-G"
+             ondragover="onDragOver(event)"
+             ondrop="onDrop(event,'varsity-G')">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JV PANEL -->
+  <div class="panel jv-panel tab-panel" data-panel="jv">
+    <div class="panel-header">
+      <h2>JV</h2>
+      <span class="panel-count" id="jv-total">0 / 21</span>
+    </div>
+    <div class="team-body">
+
+      <div class="pos-group">
+        <div class="pos-group-header">
+          <span class="pos-group-label">Forwards</span>
+          <span class="pos-group-count" id="cnt-jv-F">0 / 12</span>
+        </div>
+        <div class="drop-zone team-drop-fwd" id="zone-jv-F"
+             ondragover="onDragOver(event)"
+             ondrop="onDrop(event,'jv-F')">
+        </div>
+      </div>
+
+      <div class="pos-group">
+        <div class="pos-group-header">
+          <span class="pos-group-label">Defense</span>
+          <span class="pos-group-count" id="cnt-jv-D">0 / 6</span>
+        </div>
+        <div class="drop-zone team-drop-def" id="zone-jv-D"
+             ondragover="onDragOver(event)"
+             ondrop="onDrop(event,'jv-D')">
+        </div>
+      </div>
+
+      <div class="pos-group">
+        <div class="pos-group-header">
+          <span class="pos-group-label">Goalies</span>
+          <span class="pos-group-count" id="cnt-jv-G">0 / 3</span>
+        </div>
+        <div class="drop-zone team-drop-goal" id="zone-jv-G"
+             ondragover="onDragOver(event)"
+             ondrop="onDrop(event,'jv-G')">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /main-grid -->
+
+<!-- CUTS SECTION -->
+<div class="cuts-section tab-panel" data-panel="cuts">
+  <div class="cuts-header">
+    <h2>Cuts</h2>
+    <span class="panel-count" id="cuts-count" style="color:#dc2626;">0 players</span>
+  </div>
+  <div class="cuts-drop drop-zone" id="zone-cuts"
+       ondragover="onDragOver(event)"
+       ondrop="onDrop(event,'cuts')">
+    <span class="drop-zone-empty" id="cuts-empty">Drag players here to cut them from both rosters</span>
+  </div>
+</div>
+
+<!-- ADD PLAYER MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <h2>Add Tryout Player</h2>
+    <div class="form-grid">
+      <div class="form-row">
+        <label>First Name</label>
+        <input type="text" id="inp-first" placeholder="First" />
+      </div>
+      <div class="form-row">
+        <label>Last Name</label>
+        <input type="text" id="inp-last" placeholder="Last" />
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-row">
+        <label>Position</label>
+        <select id="inp-pos">
+          <option value="F">Forward (F)</option>
+          <option value="D">Defense (D)</option>
+          <option value="G">Goalie (G)</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Grad Year</label>
+        <select id="inp-grad">
+          <option value="2027">2027 (Senior)</option>
+          <option value="2028">2028 (Junior)</option>
+          <option value="2029">2029 (Sophomore)</option>
+          <option value="2030">2030 (Freshman)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Current Team (optional)</label>
+      <input type="text" id="inp-team" placeholder="e.g. Little Caesars, AAA..." />
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-reset" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-add"   onclick="addPlayer()">Add to Pool</button>
+    </div>
+  </div>
+</div>
+
+<!-- ASSIGN BOTTOM SHEET (mobile tap-to-assign) -->
+<div class="assign-backdrop" id="assign-backdrop" onclick="closeAssignSheet()"></div>
+<div class="assign-sheet" id="assign-sheet">
+  <div class="assign-handle"></div>
+  <div class="assign-player-name" id="assign-player-name">Player Name</div>
+  <div class="assign-player-meta" id="assign-player-meta"></div>
+
+  <div class="assign-teams">
+    <div class="assign-team-col">
+      <div class="assign-team-label varsity-label">Varsity</div>
+      <button class="assign-btn assign-btn-F" onclick="assignPlayer('varsity-F')">Forward</button>
+      <button class="assign-btn assign-btn-D" onclick="assignPlayer('varsity-D')">Defense</button>
+      <button class="assign-btn assign-btn-G" onclick="assignPlayer('varsity-G')">Goalie</button>
+    </div>
+    <div class="assign-team-col">
+      <div class="assign-team-label jv-label">JV</div>
+      <button class="assign-btn assign-btn-F" onclick="assignPlayer('jv-F')">Forward</button>
+      <button class="assign-btn assign-btn-D" onclick="assignPlayer('jv-D')">Defense</button>
+      <button class="assign-btn assign-btn-G" onclick="assignPlayer('jv-G')">Goalie</button>
+    </div>
+  </div>
+
+  <div class="assign-actions">
+    <button class="assign-secondary" onclick="assignPlayer('available')">↩ Back to Pool</button>
+    <button class="assign-cut"       onclick="assignPlayer('cuts')">✕ Cut</button>
+  </div>
+
+  <button class="assign-cancel" onclick="closeAssignSheet()">Cancel</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
